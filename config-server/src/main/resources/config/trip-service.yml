@@ -1,0 +1,5 @@
+# Centralized config for trip-service (state machine + saga outbox).
+uber:
+  outbox:
+    poll-interval-ms: ${OUTBOX_POLL_INTERVAL_MS:2000}
+    batch-size: ${OUTBOX_BATCH_SIZE:50}

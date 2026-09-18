@@ -1,0 +1,8 @@
+# Centralized config for matching-service (the signature engine).
+uber:
+  matching:
+    # How long a driver assignment lock is held before it auto-expires (ms). Bounds the blast
+    # radius if a matcher crashes mid-assignment without releasing the lock.
+    lock-ttl-ms: ${MATCH_LOCK_TTL_MS:15000}
+    # Radius (km) of the initial candidate search around the pickup point.
+    search-radius-km: ${MATCH_SEARCH_RADIUS_KM:5.0}

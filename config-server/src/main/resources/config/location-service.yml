@@ -1,0 +1,6 @@
+# Centralized config for location-service (Redis GEO index of live drivers).
+uber:
+  location:
+    # A driver's presence marker TTL (seconds): if we stop hearing pings, the driver ages out
+    # of "recently seen" so matching won't route to a phantom position.
+    driver-ttl-seconds: ${LOCATION_DRIVER_TTL_SECONDS:60}

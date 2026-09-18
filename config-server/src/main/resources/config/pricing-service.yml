@@ -1,0 +1,8 @@
+# Centralized config for pricing-service (surge model).
+uber:
+  pricing:
+    base-fare: ${PRICING_BASE_FARE:30.0}
+    per-km-rate: ${PRICING_PER_KM_RATE:12.0}
+    max-surge: ${PRICING_MAX_SURGE:3.0}
+    # Sliding window (seconds) over which per-cell demand/supply counters are kept.
+    demand-window-seconds: ${PRICING_DEMAND_WINDOW_SECONDS:300}
