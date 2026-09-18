@@ -1,0 +1,6 @@
+# Centralized config for rider-service (served by config-server in native mode).
+uber:
+  outbox:
+    # How often the outbox poller sweeps for unpublished ride-request events (ms).
+    poll-interval-ms: ${OUTBOX_POLL_INTERVAL_MS:2000}
+    batch-size: ${OUTBOX_BATCH_SIZE:50}
