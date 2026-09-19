@@ -1,0 +1,93 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # Explicit routes. Each forwards to a discovery-resolved service via lb:// (Eureka + LB).
+      routes:
+        # rider-service owns rider registration AND ride requests.
+        - id: rider-service-riders
+          uri: lb://rider-service
+          predicates:
+            - Path=/api/v1/riders/**
+        - id: rider-service-rides
+          uri: lb://rider-service
+          predicates:
+            - Path=/api/v1/rides/**
+        - id: driver-service
+          uri: lb://driver-service
+          predicates:
+            - Path=/api/v1/drivers/**
+        - id: location-service
+          uri: lb://location-service
+          predicates:
+            - Path=/api/v1/locations/**
+        - id: pricing-service
+          uri: lb://pricing-service
+          predicates:
+            - Path=/api/v1/pricing/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: pricingServiceCb
+                fallbackUri: forward:/fallback/pricing
+        - id: trip-service
+          uri: lb://trip-service
+          predicates:
+            - Path=/api/v1/trips/**
+          filters:
+            # Edge circuit breaker: if trip-service trips the breaker, fail fast to /fallback.
+            - name: CircuitBreaker
+              args:
+                name: tripServiceCb
+                fallbackUri: forward:/fallback/trips
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/payments/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+      # Global CORS so a browser SPA (the live map) can call the gateway directly.
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+# Resilience4j config backing the gateway's CircuitBreaker filters (reactor variant).
+resilience4j:
+  circuitbreaker:
+    instances:
+      tripServiceCb:
+        sliding-window-size: 10
+        failure-rate-threshold: 50          # open once >=50% of the last 10 calls fail
+        wait-duration-in-open-state: 10s    # stay open 10s before probing again (half-open)
+        permitted-number-of-calls-in-half-open-state: 3
+      pricingServiceCb:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+  timelimiter:
+    instances:
+      tripServiceCb:
+        timeout-duration: 4s                # cap how long the gateway waits on the route
+      pricingServiceCb:
+        timeout-duration: 4s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,circuitbreakers
