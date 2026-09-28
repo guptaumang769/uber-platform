@@ -46,4 +46,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build ${{ matrix.service }} Docker image
-        run: docker build -t uber-${{ matrix.service }}:${{ github.sha }} ./${{ matrix.service }}
+        run: docker build -f ./${{ matrix.service }}/Dockerfile -t uber-${{ matrix.service }}:${{ github.sha }} .
