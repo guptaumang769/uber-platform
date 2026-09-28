@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +36,7 @@ class DriverServiceTest {
     @BeforeEach
     void setUp() {
         driverService = new DriverService(driverRepository, kafkaTemplate, objectMapper);
-        when(driverRepository.save(any(Driver.class))).thenAnswer(inv -> inv.getArgument(0));
+        lenient().when(driverRepository.save(any(Driver.class))).thenAnswer(inv -> inv.getArgument(0));
     }
 
     private void stubDriver(Long id, DriverStatus status) {
