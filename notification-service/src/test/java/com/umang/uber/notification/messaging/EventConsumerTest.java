@@ -30,7 +30,7 @@ class EventConsumerTest {
     @Test
     void onTripEvent_statusEvent_publishesToCorrectTrip() throws Exception {
         String payload = """
-                {"tripId":55,"status":"IN_PROGRESS","driverId":10,"riderId":7}""";
+                {"tripId":55,"status":"ONGOING","driverId":10,"fare":120.50}""";
 
         consumer.onTripEvent(payload);
 

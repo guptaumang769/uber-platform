@@ -28,7 +28,7 @@ class DriverSupplyConsumerTest {
     @Test
     void onDriverLocation_callsRecordSupplyWithCorrectCoordinates() throws Exception {
         String payload = """
-                {"driverId":42,"lat":12.97,"lng":77.59,"timestampMs":1000000}
+                {"driverId":42,"lat":12.97,"lng":77.59,"epoch":1000000}
                 """;
 
         consumer.onDriverLocation(payload);
