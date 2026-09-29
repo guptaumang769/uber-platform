@@ -3,6 +3,18 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /build
 COPY pom.xml .
+COPY common/pom.xml ./common/pom.xml
+COPY config-server/pom.xml ./config-server/pom.xml
+COPY discovery-server/pom.xml ./discovery-server/pom.xml
+COPY api-gateway/pom.xml ./api-gateway/pom.xml
+COPY rider-service/pom.xml ./rider-service/pom.xml
+COPY driver-service/pom.xml ./driver-service/pom.xml
+COPY location-service/pom.xml ./location-service/pom.xml
+COPY matching-service/pom.xml ./matching-service/pom.xml
+COPY pricing-service/pom.xml ./pricing-service/pom.xml
+COPY trip-service/pom.xml ./trip-service/pom.xml
+COPY payment-service/pom.xml ./payment-service/pom.xml
+COPY notification-service/pom.xml ./notification-service/pom.xml
 COPY common ./common
 COPY matching-service ./matching-service
 RUN mvn -q -B -pl matching-service -am -DskipTests package
